@@ -53,7 +53,7 @@ def clean_ground_truth_clusters(clusters, cohesion_thresh=0.7, inter_thresh=0.65
     return cleaned_clusters
 
 
-# Purpose: 
+# Purpose:
 #       Measures how similar the names within the same cluster are.
 # How it works:
 #       1. Iterates over each cluster.
@@ -75,7 +75,7 @@ def average_intra_cluster_similarity(clusters):
     return np.mean(sims) if sims else 0
 
 
-# Purpose: 
+# Purpose:
 #       Measures how similar the names are across different clusters.
 # How it works:
 #       1. Iterates over all pairs of distinct clusters (i, j) (where i < j).
@@ -90,7 +90,7 @@ def average_inter_cluster_similarity(clusters, sample_size=1000):
     sims = []
     pairs = []
     for i in range(len(clusters)):
-        for j in range(i+1, len(clusters)):
+        for j in range(i + 1, len(clusters)):
             for a in clusters[i][:2]:
                 for b in clusters[j][:2]:
                     pairs.append((a, b))
@@ -128,11 +128,12 @@ def get_pairs(cluster):
 
     return pairs
 
+
 # NOTE: This function calculates the clustering accuracy based on the true clusters and predicted clusters.
 # It uses precision, recall, and F1 score as metrics.
 # The function also takes an optional parameter training_names to filter the clusters based on the training set.
 # For more details on the metrics, search about "precision", "recall", and "F1 score" in the internet, as it is a well documented subject.
-def clustering_accuracy(true_clusters, predicted_clusters):  
+def clustering_accuracy(true_clusters, predicted_clusters):
     true_pairs = get_pairs(true_clusters)
     pred_pairs = get_pairs(predicted_clusters)
 
@@ -142,13 +143,13 @@ def clustering_accuracy(true_clusters, predicted_clusters):
 
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall) > 0
+        else 0.0
+    )
 
-    return {
-        "precision": precision,
-        "recall": recall,
-        "f1_score": f1
-    }
+    return {"precision": precision, "recall": recall, "f1_score": f1}
 
 
 # cluster_A = [["Test", "Test1"], ["Hello"], ["Sun", "Sun1"]]

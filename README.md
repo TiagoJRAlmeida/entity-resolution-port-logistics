@@ -23,11 +23,15 @@ Data standardization and entity resolution system for large-scale port logistics
 
 ## Overview
 
-Companies operating in large logistics environments tend to accumulate inconsistent records over time — the same entity appearing under dozens of name variants due to manual data entry, abbreviations, typos, and formatting differences. At scale, this makes statistical analysis unreliable and cross-dataset reconciliation impractical.
+Companies operating in large logistics environments tend to accumulate inconsistent records over time. 
+The same entity appearing under dozens of name variants due to manual data entry, abbreviations, typos, and formatting differences. 
+At scale, this makes statistical analysis unreliable and cross-dataset reconciliation impractical.
 
-This project was developed as the capstone of a Computer Engineering degree at the University of Aveiro, in partnership with APS — Administração dos Portos de Sines e do Algarve, S.A. The system processes datasets with ~4 million rows and ~60 columns, focusing on the `name` and `Identification_number` fields.
+This project was developed as the capstone of a Computer Engineering degree at the University of Aveiro, in partnership with APS, _Administração dos Portos de Sines e do Algarve, S.A._. 
+The system processes datasets with ~4 million rows and ~60 columns, focusing on the `name` and `Identification_number` fields.
 
-The approach combines semantic embeddings (SentenceTransformers), approximate nearest-neighbour search (FAISS), and post-processing filters (Levenshtein distance, Jaccard similarity) to cluster name variants and assign a canonical representative to each cluster. The final output is a synonym map that can be used to standardise any downstream dataset.
+The approach combines semantic embeddings (SentenceTransformers), approximate nearest-neighbour search (FAISS), and post-processing filters (Levenshtein distance, Jaccard similarity) 
+to cluster name variants and assign a canonical representative to each cluster. The final output is a synonym map that can be used to standardise any downstream dataset.
 
 **Key metrics (ST+FAISS approach):**
 
@@ -46,7 +50,8 @@ The pipeline runs in seven stages:
 1. **Preprocessing** — Lowercase conversion, punctuation removal, stripping of legal suffixes (e.g. "Lda.", "S.A.") and geographic terms.
 2. **Vectorisation** — Semantic embeddings generated per company name via SentenceTransformers.
 3. **Clustering** — FAISS-indexed approximate nearest-neighbour search groups semantically similar names. A configurable similarity threshold (default: 0.81) controls cluster tightness.
-4. **Post-processing** — Noisy clusters are refined using a weighted combination of normalised Levenshtein distance (70%) and Jaccard similarity (30%). Outliers are isolated into their own groups.
+4. **Post-processing** — Noisy clusters are refined using a weighted combination of normalised Levenshtein distance (70%) and Jaccard similarity (30%). 
+Outliers are isolated into their own groups.
 5. **Country prefix separation** — Clusters containing names from multiple countries (inferred from suffixes like PT, BR, ES) are subdivided accordingly.
 6. **Canonical name assignment** — Each cluster is assigned the name closest to the cluster centroid as its canonical representative.
 7. **Synonym map export** — A final JSON map (`name_variant → canonical_name`) is generated and used to update the input datasets.
@@ -73,7 +78,6 @@ An optional reference table (ground truth) can be supplied to seed initial clust
     ├── main.py                    # Entry point
     ├── interface.py               # Terminal UI
     ├── string_cleaning.py         # Preprocessing logic
-    ├── requirements.txt
     └── clustering/
         ├── clustering.py          # Core clustering algorithm
         └── accuracy_test.py       # Evaluation metrics
@@ -88,6 +92,10 @@ An optional reference table (ground truth) can be supplied to seed initial clust
 > Requires [Docker](https://www.docker.com/) installed.
 
 ```bash
+# Clone the repository
+git clone https://github.com/TiagoJRAlmeida/entity-resolution-port-logistics.git
+cd entity-resolution-port-logistics
+
 # Build the image
 docker build -t entity-resolution .
 
@@ -113,7 +121,7 @@ python3 -m venv venv
 source venv/bin/activate        # On Windows: venv\Scripts\activate
 
 # Install dependencies
-pip install -r src/requirements.txt
+pip install -r requirements.txt
 
 # Run the application
 cd src
